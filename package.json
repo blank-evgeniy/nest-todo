@@ -4,11 +4,14 @@
   "scripts": {
     "build": "turbo build",
     "dev": "turbo dev",
+    "dev:back": "turbo run dev --filter=backend",
+    "dev:front": "turbo run dev --filter=frontend",
     "lint": "turbo lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
     "prettier": "^3.4.2",
+    "prisma": "^6.3.1",
     "turbo": "^2.4.0",
     "typescript": "5.7.3"
   },
