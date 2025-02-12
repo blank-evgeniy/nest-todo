@@ -11,9 +11,10 @@ datasource db {
 model ToDo {
   id        Int     @id @default(autoincrement())
   title     String
+  complete  Boolean @default(false)
   content   String?
   author    User?   @relation(fields: [authorId], references: [id])
-  authorId  Int?
+  authorId  Int
 }
 
 model User {
