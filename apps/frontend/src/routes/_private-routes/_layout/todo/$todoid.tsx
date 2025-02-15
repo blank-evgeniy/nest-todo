@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router';
 
-export const Route = createFileRoute('/_layout/todo/$todoid')({
+export const Route = createFileRoute('/_private-routes/_layout/todo/$todoid')({
   component: RouteComponent,
 });
 

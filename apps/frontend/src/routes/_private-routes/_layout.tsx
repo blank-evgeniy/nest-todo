@@ -1,7 +1,7 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router';
-import { Footer, Header } from '../components/layout';
+import { Footer, Header } from '../../components/layout';
 
-export const Route = createFileRoute('/_layout')({
+export const Route = createFileRoute('/_private-routes/_layout')({
   component: RouteComponent,
 });
 

@@ -1,4 +1,5 @@
-import { axiosClassic } from '../../config/api/api';
+import { Profile } from '@/shared/types/profile';
+import { axiosWithAuth } from '../../config/api/api';
 
 class ProfileService {
   private BASE_URL = '/profile';
@@ -8,7 +9,7 @@ class ProfileService {
   }
 
   async getProfile() {
-    const response = await axiosClassic.get<ProfileService>(this.BASE_URL);
+    const response = await axiosWithAuth.get<Profile>(this.BASE_URL);
 
     return response.data;
   }
