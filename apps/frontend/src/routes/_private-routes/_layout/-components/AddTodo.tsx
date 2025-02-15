@@ -1,13 +1,12 @@
-import { Button, buttonVariants } from '@/shared/ui/button';
-import { PlusIcon } from 'lucide-react';
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
-import { Input } from '@/shared/ui/input';
-import { cn } from '@/shared/lib/utils';
-import { useCreateTodo } from '@/shared/api/todo/hooks/useCreateTodo';
-
-import { z } from 'zod';
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
+import { cn } from '@/shared/lib/utils';
+import { useCreateTodo } from '@/shared/api/todo/hooks/useCreateTodo';
+import { AddTodoForm, addTodoFormSchema } from '@/shared/lib/validation/add-todo.validation';
+import { Button, buttonVariants } from '@/shared/ui/button';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/ui/popover';
+import { Input } from '@/shared/ui/input';
 import {
   Form,
   FormControl,
@@ -18,28 +17,30 @@ import {
   FormMessage,
 } from '@/shared/ui/form';
 import { Textarea } from '@/shared/ui/textarea';
-
-const formSchema = z.object({
-  title: z.string().min(2).max(20),
-  content: z.string().min(2).max(50).optional(),
-});
+import { PlusIcon } from 'lucide-react';
 
 export const AddTodo = () => {
+  const [popoverOpen, setPopoverOpen] = useState(false);
   const { mutate, isPending } = useCreateTodo();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<AddTodoForm>({
+    resolver: zodResolver(addTodoFormSchema),
     defaultValues: {
       title: '',
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    mutate(values);
+  function onSubmit(values: AddTodoForm) {
+    mutate(values, {
+      onSuccess: () => {
+        form.reset();
+        setPopoverOpen(false);
+      },
+    });
   }
 
   return (
-    <Popover>
+    <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
       <PopoverTrigger
         className={cn(
           buttonVariants({ size: 'default', variant: 'default', className: 'cursor-pointer' })

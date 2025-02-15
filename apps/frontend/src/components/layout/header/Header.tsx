@@ -46,7 +46,7 @@ export const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger className='cursor-pointer'>
                 <Avatar>
-                  <AvatarFallback className='font-semibold'>{userName?.slice(0, 2)}</AvatarFallback>
+                  <AvatarFallback className='font-semibold'>{userName?.slice(0, 1)}</AvatarFallback>
                 </Avatar>
               </DropdownMenuTrigger>
 

@@ -5,7 +5,11 @@ class TodoService {
   private BASE_URL = '/todo';
 
   getQueryKey(otherKeys?: string[] | string) {
-    return otherKeys ? [this.BASE_URL, ...otherKeys] : [this.BASE_URL];
+    if (!otherKeys) return [this.BASE_URL];
+
+    if (typeof otherKeys === 'string') return [this.BASE_URL, otherKeys];
+
+    return [this.BASE_URL, ...otherKeys];
   }
 
   async getTodos() {

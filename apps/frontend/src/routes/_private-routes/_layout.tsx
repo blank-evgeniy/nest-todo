@@ -1,5 +1,5 @@
 import { createFileRoute, Outlet } from '@tanstack/react-router';
-import { Footer, Header } from '../../components/layout';
+import { Header } from '../../components/layout';
 
 export const Route = createFileRoute('/_private-routes/_layout')({
   component: RouteComponent,
@@ -14,8 +14,6 @@ function RouteComponent() {
         <main className='flex-1'>
           <Outlet />
         </main>
-
-        <Footer />
       </div>
     </div>
   );

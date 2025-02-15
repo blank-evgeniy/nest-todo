@@ -6,6 +6,7 @@ class AuthService {
   private BASE_URL = '/auth';
 
   getQueryKey(otherKeys: string[] | string) {
+    if (typeof otherKeys === 'string') return [this.BASE_URL, otherKeys];
     return [this.BASE_URL, ...otherKeys];
   }
 

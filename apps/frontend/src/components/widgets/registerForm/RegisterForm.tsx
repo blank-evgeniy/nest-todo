@@ -1,29 +1,38 @@
 import { useRegister } from '@/shared/api/auth/hooks/useRegister';
+import { errorCatch } from '@/shared/config/api/error-catch';
 import { cn } from '@/shared/lib/utils';
+import { RegisterFormInput, registerFormSchema } from '@/shared/lib/validation/register.validation';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/shared/ui/form';
 import { Input } from '@/shared/ui/input';
-import { Label } from '@/shared/ui/label';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useNavigate } from '@tanstack/react-router';
+import { useForm } from 'react-hook-form';
 
 export function RegisterForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const navigate = useNavigate();
 
-  const { mutate, isPending } = useRegister({
+  const { mutate, isPending, error } = useRegister({
     onSuccess: () => navigate({ to: '/' }),
   });
 
-  const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const form = useForm<RegisterFormInput>({
+    resolver: zodResolver(registerFormSchema),
+    defaultValues: { confirmPassword: '', email: '', password: '' },
+  });
 
-    const formData = new FormData(event.currentTarget);
-    const email = formData.get('email') as string;
-    const password = formData.get('password') as string;
-
-    const requestData = { password, email };
-
-    mutate(requestData);
-  };
+  function onSubmit(values: RegisterFormInput) {
+    mutate({ email: values.email, password: values.password });
+  }
 
   return (
     <div className={cn('flex flex-col gap-6', className)} {...props}>
@@ -35,21 +44,60 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleRegister}>
-            <div className='flex flex-col gap-6'>
-              <div className='grid gap-2'>
-                <Label htmlFor='email'>Email</Label>
-                <Input name='email' id='email' type='email' placeholder='m@example.com' required />
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+              <div className='flex flex-col gap-6'>
+                <FormField
+                  control={form.control}
+                  name='email'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email</FormLabel>
+                      <FormControl>
+                        <Input placeholder='example@ex.com' {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='password'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Password</FormLabel>
+                      <FormControl>
+                        <Input placeholder='Enter password...' {...field} type='password' />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='confirmPassword'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Confirm password</FormLabel>
+                      <FormControl>
+                        <Input placeholder='Confirm password...' {...field} type='password' />
+                      </FormControl>
+                      <FormMessage />
+                      <FormDescription>Please repeat the password.</FormDescription>
+                    </FormItem>
+                  )}
+                />
+
+                {!!error && <p className='text-destructive font-medium'>{errorCatch(error)}</p>}
+
+                <Button type='submit' className='w-full' disabled={isPending}>
+                  Sign up
+                </Button>
               </div>
-              <div className='grid gap-2'>
-                <Label htmlFor='password'>Password</Label>
-                <Input name='password' id='password' type='password' required />
-              </div>
-              <Button type='submit' className='w-full' disabled={isPending}>
-                Sign up
-              </Button>
-            </div>
-          </form>
+            </form>
+          </Form>
         </CardContent>
       </Card>
     </div>

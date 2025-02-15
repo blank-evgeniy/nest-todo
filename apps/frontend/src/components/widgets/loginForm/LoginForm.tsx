@@ -1,4 +1,5 @@
 import { useLogin } from '@/shared/api/auth/hooks/useLogin';
+import { errorCatch } from '@/shared/config/api/error-catch';
 import { cn } from '@/shared/lib/utils';
 import { Button } from '@/shared/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card';
@@ -9,7 +10,7 @@ import { useNavigate } from '@tanstack/react-router';
 export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'div'>) {
   const navigate = useNavigate();
 
-  const { mutate, isPending } = useLogin({
+  const { mutate, isPending, error } = useLogin({
     onSuccess: () => navigate({ to: '/' }),
   });
 
@@ -45,6 +46,9 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
                 <Label htmlFor='password'>Password</Label>
                 <Input name='password' id='password' type='password' required />
               </div>
+
+              {!!error && <p className='text-destructive font-medium'>{errorCatch(error)}</p>}
+
               <Button type='submit' className='w-full' disabled={isPending}>
                 Login
               </Button>
