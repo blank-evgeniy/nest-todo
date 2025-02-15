@@ -2,7 +2,7 @@ import axios, { CreateAxiosDefaults } from 'axios';
 import { getAuthToken, removeAuthToken } from './auth-token';
 
 const options: CreateAxiosDefaults = {
-  baseURL: process.env.API_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },

@@ -8,7 +8,5 @@ export interface LoginResponse {
 }
 
 export interface RegisterResponse {
-  id: number;
-  name: string | null;
-  email: string;
+  access_token: string;
 }

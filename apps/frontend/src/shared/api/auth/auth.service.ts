@@ -15,10 +15,16 @@ class AuthService {
     const accessToken = response.data.access_token;
 
     if (accessToken) saveAuthToken(accessToken);
+
+    return response.data;
   }
 
   async register(data: AuthRequestData) {
     const response = await axiosClassic.post<RegisterResponse>(`${this.BASE_URL}/register`, data);
+
+    const accessToken = response.data.access_token;
+
+    if (accessToken) saveAuthToken(accessToken);
 
     return response.data;
   }

@@ -5,7 +5,6 @@ import { Prisma, User } from '@prisma/client';
 import { UserService } from 'src/user/user.service';
 import { JwtPayload } from './types/auth.types';
 import { DatabaseService } from 'src/database/database.service';
-import { UserProfile } from 'src/user/types/user.types';
 
 @Injectable()
 export class AuthService {
@@ -36,7 +35,7 @@ export class AuthService {
     };
   }
 
-  async register(createUserDto: Prisma.UserCreateInput): Promise<UserProfile> {
+  async register(createUserDto: Prisma.UserCreateInput) {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
 
     const userData = { ...createUserDto, password: hashedPassword };
@@ -45,9 +44,10 @@ export class AuthService {
       data: userData,
     });
 
-    const { password, ...result } = user;
-    void password;
+    const payload: JwtPayload = { email: user.email, sub: user.id, name: user.name };
 
-    return result;
+    return {
+      access_token: this.jwtService.sign(payload),
+    };
   }
 }

@@ -11,79 +11,124 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as IndexImport } from './routes/index'
-import { Route as TodoTodoidImport } from './routes/todo/$todoid'
+import { Route as AuthImport } from './routes/auth'
+import { Route as LayoutImport } from './routes/_layout'
+import { Route as LayoutIndexImport } from './routes/_layout/index'
+import { Route as LayoutTodoTodoidImport } from './routes/_layout/todo/$todoid'
 
 // Create/Update Routes
 
-const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+const AuthRoute = AuthImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRoute,
 } as any)
 
-const TodoTodoidRoute = TodoTodoidImport.update({
+const LayoutRoute = LayoutImport.update({
+  id: '/_layout',
+  getParentRoute: () => rootRoute,
+} as any)
+
+const LayoutIndexRoute = LayoutIndexImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutTodoTodoidRoute = LayoutTodoTodoidImport.update({
   id: '/todo/$todoid',
   path: '/todo/$todoid',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => LayoutRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/_layout': {
+      id: '/_layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof LayoutImport
       parentRoute: typeof rootRoute
     }
-    '/todo/$todoid': {
-      id: '/todo/$todoid'
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthImport
+      parentRoute: typeof rootRoute
+    }
+    '/_layout/': {
+      id: '/_layout/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutIndexImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/todo/$todoid': {
+      id: '/_layout/todo/$todoid'
       path: '/todo/$todoid'
       fullPath: '/todo/$todoid'
-      preLoaderRoute: typeof TodoTodoidImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutTodoTodoidImport
+      parentRoute: typeof LayoutImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface LayoutRouteChildren {
+  LayoutIndexRoute: typeof LayoutIndexRoute
+  LayoutTodoTodoidRoute: typeof LayoutTodoTodoidRoute
+}
+
+const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutIndexRoute: LayoutIndexRoute,
+  LayoutTodoTodoidRoute: LayoutTodoTodoidRoute,
+}
+
+const LayoutRouteWithChildren =
+  LayoutRoute._addFileChildren(LayoutRouteChildren)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/todo/$todoid': typeof TodoTodoidRoute
+  '': typeof LayoutRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/': typeof LayoutIndexRoute
+  '/todo/$todoid': typeof LayoutTodoTodoidRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/todo/$todoid': typeof TodoTodoidRoute
+  '/auth': typeof AuthRoute
+  '/': typeof LayoutIndexRoute
+  '/todo/$todoid': typeof LayoutTodoTodoidRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/todo/$todoid': typeof TodoTodoidRoute
+  '/_layout': typeof LayoutRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_layout/': typeof LayoutIndexRoute
+  '/_layout/todo/$todoid': typeof LayoutTodoTodoidRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/todo/$todoid'
+  fullPaths: '' | '/auth' | '/' | '/todo/$todoid'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/todo/$todoid'
-  id: '__root__' | '/' | '/todo/$todoid'
+  to: '/auth' | '/' | '/todo/$todoid'
+  id: '__root__' | '/_layout' | '/auth' | '/_layout/' | '/_layout/todo/$todoid'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  TodoTodoidRoute: typeof TodoTodoidRoute
+  LayoutRoute: typeof LayoutRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  TodoTodoidRoute: TodoTodoidRoute,
+  LayoutRoute: LayoutRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 
 export const routeTree = rootRoute
@@ -96,15 +141,27 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/todo/$todoid"
+        "/_layout",
+        "/auth"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/_layout": {
+      "filePath": "_layout.tsx",
+      "children": [
+        "/_layout/",
+        "/_layout/todo/$todoid"
+      ]
     },
-    "/todo/$todoid": {
-      "filePath": "todo/$todoid.tsx"
+    "/auth": {
+      "filePath": "auth.tsx"
+    },
+    "/_layout/": {
+      "filePath": "_layout/index.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/todo/$todoid": {
+      "filePath": "_layout/todo/$todoid.tsx",
+      "parent": "/_layout"
     }
   }
 }
