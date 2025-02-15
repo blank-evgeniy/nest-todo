@@ -1,10 +1,18 @@
 import { LoginForm } from '@/components/widgets/loginForm/LoginForm';
 import { RegisterForm } from '@/components/widgets/registerForm/RegisterForm';
+import { getAuthToken } from '@/shared/config/api/auth-token';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/ui/tabs';
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/auth')({
   component: RouteComponent,
+  beforeLoad: () => {
+    const isLogged = getAuthToken();
+
+    if (isLogged) {
+      throw redirect({ to: '/' });
+    }
+  },
 });
 
 function RouteComponent() {
