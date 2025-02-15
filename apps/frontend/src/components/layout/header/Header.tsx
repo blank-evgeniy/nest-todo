@@ -1,3 +1,4 @@
+import { ThemeToggle } from '@/components/widgets/ThemeToggle/ThemeToggler';
 import { authService } from '@/shared/api/auth/auth.service';
 import { useProfile } from '@/shared/api/profile/hooks/useProfile';
 import { Avatar, AvatarFallback } from '@/shared/ui/avatar';
@@ -37,35 +38,38 @@ export const Header = () => {
         <SquareCheck /> NestToDo
       </h2>
 
-      {isLoading || !userName ? (
-        <Skeleton className='h-10 w-10 shrink-0 rounded-full' />
-      ) : (
-        <>
-          <DropdownMenu>
-            <DropdownMenuTrigger className='cursor-pointer'>
-              <Avatar>
-                <AvatarFallback className='font-semibold'>{userName?.slice(0, 2)}</AvatarFallback>
-              </Avatar>
-            </DropdownMenuTrigger>
+      <div className='flex gap-4'>
+        {isLoading || !userName ? (
+          <Skeleton className='h-10 w-10 shrink-0 rounded-full' />
+        ) : (
+          <>
+            <DropdownMenu>
+              <DropdownMenuTrigger className='cursor-pointer'>
+                <Avatar>
+                  <AvatarFallback className='font-semibold'>{userName?.slice(0, 2)}</AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
 
-            <DropdownMenuContent align='end' sideOffset={8} className='w-56'>
-              <DropdownMenuLabel>{userName}</DropdownMenuLabel>
-              <DropdownMenuSeparator />
+              <DropdownMenuContent align='end' sideOffset={8} className='w-56'>
+                <DropdownMenuLabel>{userName}</DropdownMenuLabel>
+                <DropdownMenuSeparator />
 
-              <DropdownMenuItem>
-                <Button
-                  onClick={handleLogout}
-                  variant={'destructive'}
-                  className='w-full cursor-pointer'
-                  size={'sm'}
-                >
-                  Log out
-                </Button>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </>
-      )}
+                <DropdownMenuItem>
+                  <Button
+                    onClick={handleLogout}
+                    variant={'destructive'}
+                    className='w-full cursor-pointer'
+                    size={'sm'}
+                  >
+                    Log out
+                  </Button>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </>
+        )}
+        <ThemeToggle />
+      </div>
     </header>
   );
 };
