@@ -27,11 +27,11 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
 
   const form = useForm<RegisterFormInput>({
     resolver: zodResolver(registerFormSchema),
-    defaultValues: { confirmPassword: '', email: '', password: '' },
+    defaultValues: { confirmPassword: '', email: '', newPassword: '' },
   });
 
   function onSubmit(values: RegisterFormInput) {
-    mutate({ email: values.email, password: values.password });
+    mutate({ email: values.email, password: values.newPassword });
   }
 
   return (
@@ -54,7 +54,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
                     <FormItem>
                       <FormLabel>Email</FormLabel>
                       <FormControl>
-                        <Input placeholder='example@ex.com' {...field} />
+                        <Input placeholder='example@ex.com' {...field} autoComplete='email' />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -63,12 +63,17 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
 
                 <FormField
                   control={form.control}
-                  name='password'
+                  name='newPassword'
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Password</FormLabel>
                       <FormControl>
-                        <Input placeholder='Enter password...' {...field} type='password' />
+                        <Input
+                          placeholder='Enter password...'
+                          {...field}
+                          type='password'
+                          autoComplete='new-password'
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -82,7 +87,12 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
                     <FormItem>
                       <FormLabel>Confirm password</FormLabel>
                       <FormControl>
-                        <Input placeholder='Confirm password...' {...field} type='password' />
+                        <Input
+                          placeholder='Confirm password...'
+                          {...field}
+                          type='password'
+                          autoComplete='new-password'
+                        />
                       </FormControl>
                       <FormMessage />
                       <FormDescription>Please repeat the password.</FormDescription>
@@ -90,7 +100,7 @@ export function RegisterForm({ className, ...props }: React.ComponentPropsWithou
                   )}
                 />
 
-                {!!error && <p className='text-destructive font-medium'>{errorCatch(error)}</p>}
+                {!!error && <p className='font-medium text-destructive'>{errorCatch(error)}</p>}
 
                 <Button type='submit' className='w-full' disabled={isPending}>
                   Sign up

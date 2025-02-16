@@ -52,7 +52,7 @@ export const AddTodo = () => {
         <div className='grid gap-4'>
           <div className='space-y-2'>
             <h4 className='font-medium leading-none'>New ToDo</h4>
-            <p className='text-muted-foreground text-sm'>Enter the data of the new ToDo</p>
+            <p className='text-sm text-muted-foreground'>Enter the data of the new ToDo</p>
           </div>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className='grid gap-2'>
@@ -63,7 +63,7 @@ export const AddTodo = () => {
                   <FormItem>
                     <FormLabel>Title</FormLabel>
                     <FormControl>
-                      <Input placeholder='ToDo...' {...field} />
+                      <Input placeholder='ToDo...' {...field} autoComplete='off' />
                     </FormControl>
                     <FormDescription>It's the name of your ToDo.</FormDescription>
                     <FormMessage />
@@ -77,7 +77,7 @@ export const AddTodo = () => {
                   <FormItem>
                     <FormLabel>Description</FormLabel>
                     <FormControl>
-                      <Textarea placeholder='Description...' {...field} />
+                      <Textarea placeholder='Description...' {...field} autoComplete='off' />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

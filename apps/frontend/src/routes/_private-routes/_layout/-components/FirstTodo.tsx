@@ -35,7 +35,11 @@ export const FirstTodo = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder='Enter the name of your first ToDo' {...field} />
+                  <Input
+                    placeholder='Enter the name of your first ToDo'
+                    {...field}
+                    autoComplete='off'
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
